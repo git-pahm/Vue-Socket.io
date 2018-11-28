@@ -11,13 +11,15 @@ export default class VueSocketIO {
      * @param io
      * @param vuex
      * @param debug
+     * @param mixin
      */
-    constructor({connection, vuex, debug}){
+    constructor({connection, vuex, debug}, mixin=Mixin){
 
         Logger.debug = debug;
         this.io = this.connect(connection);
         this.emitter = new Emitter(vuex);
         this.listener = new Listenler(this.io, this.emitter);
+        this.mixin = mixin
 
     }
 
@@ -29,7 +31,7 @@ export default class VueSocketIO {
 
         Vue.prototype.$socket = this.io;
         Vue.prototype.$vueSocketIo = this;
-        Vue.mixin(Mixin);
+        Vue.mixin(this.mixin);
 
         Logger.info('Vue-Socket.io plugin enabled');
 
